@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Logger Unprofessional 😎</title>
+        <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+        <script src="/static/chart.js"></script>
+        <script src="/static/hammer.js"></script>
+        <script src="/static/chartjs-plugin-zoom.js"></script>
+        <script src="/static/handsontable.min.js"></script>
+        <script src="/static/animation-scripts.js"></script>
+        <script src="/static/popper.min.js"></script>
+        <script src="/static/jquery.min.js"></script>
+        <script src="/static/bootstrap.min.js"></script>
+        
+        <link rel="stylesheet" href="/static/handsontable.min.css">
+        <link rel="stylesheet" href="/static/bootstrap.min.css">
+        <link rel="stylesheet" href="/static/new.css">
+        <!-- Bootstrap CSS -->
+        <!-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> -->
+        <!-- Bootstrap JS, Popper.js, and jQuery (Necessary for Bootstrap's JavaScript plugins) -->
+        <!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+
+        <script type="text/javascript">
+            $(document).ready(function(){
+            // Prevent dropdown from closing when clicking inside
+            $('.dropdown-menu').on('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Optional: Close the dropdown by clicking outside or on another dropdown
+            // $(document).on('click', function(e) {
+            //     if (!$(e.target).closest('.navbar .dropdown').length) {
+            //     $('.dropdown-menu').collapse('hide');
+            //     }
+            // });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="ml-3" style="height: 20vh;">
+            <h1>Logger Unprofessional</h1>
+            <p>Version 0.3.1</p>
+            <button id="reset" class="btn btn-outline-dark mt-3 mb-3">Reset Graph Zoom</button>
+            <br>
+            <br>
+        </div>
+
+        <div class="container-fluid">
+            <div class="row" style="height: 80vh;">
+              <div id="leftPane" class="col shadow-sm ml-3 mr-1" style="resize: horizontal">
+                <!-- Tabbed Menu -->
+                <ul class="nav nav-tabs" id="myTab" role="tablist">
+                  <li class="nav-item">
+                    <a class="nav-link active" id="spreadsheet-tab" data-toggle="tab" href="#spreadsheet-container" role="tab" aria-selected="true">Spreadsheet</a>
+                  </li>
+                  <li class="nav-item">
+                    <a class="nav-link" id="plot-tab" data-toggle="tab" href="#plot-container" role="tab" aria-selected="false">Plot</a>
+                  </li>
+                </ul>
+                <div class="tab-content" id="myTabContent">
+                
+                  <div class="tab-pane fade show active pt-3" id="spreadsheet-container" role="tabpanel" aria-labelledby="home-tab">
+
+                    <nav class="navbar navbar-expand-lg navbar-light">
+                        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                          <ul class="navbar-nav">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                  Save/Load
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width:30vw;">
+
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col">
+                                                <p>Save Data</p>
+                                                <button id="exportData" class="btn btn-outline-dark mb-3">Export as csv</button>          
+                                            </div>
+                                            <div class="col">
+                                                <p>Load Data</p>
+                                                <button id="importData" class="btn btn-outline-dark mb-3">Import from csv</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <li class="nav-item dropdown">
+                              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Collect Data
+                              </a>
+                              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink" style="width: 30vw;">
+                                
+                                <button id="connect-labquest" class="btn btn-outline-dark mb-3">Connect to Vernier LabQuest</button>
+
+                                <p>Connected sensors:</p>
+                                <!-- <ul id="sensor-list" class="list-group">
+                                    <li class="list-group">Channel 1: <span id="ch1-sensor-name">--</span> <button id="ch1-sensor-start" class="btn btn-outline-dark disabled">Start</button> <button id="ch1-sensor-stop" class="btn btn-outline-dark disabled">Stop</button></li>
+                                    <li class="list-group">Channel 2: <span id="ch2-sensor-name">--</span> <button id="ch2-sensor-start" class="btn btn-outline-dark disabled">Start</button> <button id="ch2-sensor-stop" class="btn btn-outline-dark disabled">Stop</button></li>
+                                    <li class="list-group">Channel 3: <span id="ch3-sensor-name">--</span> <button id="ch3-sensor-start" class="btn btn-outline-dark disabled">Start</button> <button id="ch3-sensor-stop" class="btn btn-outline-dark disabled">Stop</button></li>
+                                </ul> -->
+
+                                <p>Channel 1: <span id="ch1-sensor-name">--</span> <button id="ch1-sensor-stop" class="btn btn-outline-dark float-right disabled">Stop</button> <button id="ch1-sensor-start" class="btn btn-outline-dark float-right disabled">Start</button> </p>
+                                <p>Channel 2: <span id="ch2-sensor-name">--</span> <button id="ch2-sensor-stop" class="btn btn-outline-dark float-right disabled">Stop</button> <button id="ch2-sensor-start" class="btn btn-outline-dark float-right disabled">Start</button></p>
+                                <p>Channel 3: <span id="ch3-sensor-name">--</span> <button id="ch3-sensor-stop" class="btn btn-outline-dark float-right disabled">Stop</button> <button id="ch3-sensor-start" class="btn btn-outline-dark float-right disabled">Start</button></p>
+
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      </nav>
+                      
+                      <div id="spreadsheet" style="width: 100%; height: auto;"></div>
+
+                  </div>
+
+                  <div class="tab-pane fade pt-3" id="plot-container" role="tabpanel">
+
+                    <p>Best Fit: <i id="best-fit-render">--</i></p>
+
+                    <form id="interpolation-options-select">
+                        <div style="height: 40vh; overflow-y: auto;">
+                            <input type="radio" id="plot-proportional" name="interpolation-options" value="proportional" class="interpolation-options">
+                            <label for="proportional">Proportional</label><br>
+                            <input type="radio" id="plot-linear" name="interpolation-options" value="linear" class="interpolation-options">
+                            <label for="linear">Linear</label><br>
+                            <input type="radio" id="plot-quadratic" name="interpolation-options" value="quadratic" class="interpolation-options">
+                            <label for="quadratic">Quadratic</label><br>
+                            <input type="radio" id="plot-cubic" name="interpolation-options" value="cubic" class="interpolation-options">
+                            <label for="cubic">Cubic</label><br>
+                            <input type="radio" id="plot-exponential" name="interpolation-options" value="exponential" class="interpolation-options">
+                            <label for="exponential">Exponential</label><br>
+                            <input type="radio" id="plot-logarithmic" name="interpolation-options" value="logarithmic" class="interpolation-options">
+                            <label for="logarithmic">Logarithmic</label><br>
+                            <input type="radio" id="plot-power" name="interpolation-options" value="power" class="interpolation-options">
+                            <label for="power">Power</label><br>
+                            <input type="radio" id="plot-sinusoidal" name="interpolation-options" value="sinusoidal" class="interpolation-options">
+                            <label for="sinusoidal">Sinusoidal</label><br>
+                            <br>
+                        </div>
+                    </form>
+
+                    <button id="clear-plot" class="btn btn-outline-dark mb-3">Clear Selection</button>
+
+                  </div>
+                </div>
+              </div>
+              <div id="rightPane" class="col shadow-sm mr-3 ml-1">
+                <canvas id="chart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          
+          <div role="alert" id="error-toast" class="toast" data-autohide="true" data-delay="5000" style="position: absolute; top: 5%; right: 5%;">
+            <div class="toast-header">
+              <strong class="mr-auto" id="error-toast-title">Error</strong>
+              <button type="button" class="ml-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="toast-body">
+              <p id="error-toast-message"></p>
+            </div>
+        </div>
+
+    </body>
+</html>

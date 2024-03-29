@@ -1,0 +1,22 @@
+.btn {
+  border-radius: 2px !important;
+}
+
+.btn:hover {
+  box-shadow: 0 0 5px 2px rgba(0,0,0,0.1) !important;
+}
+
+.btn-outline-dark {
+  color: #000 !important;
+}
+
+.btn-outline-dark:hover {
+  background-color: #ddd !important;
+  color: #000 !important;
+}
+
+.btn-outline-dark:hover.disabled {
+  cursor: not-allowed !important;
+  background-color: #fff !important;
+  box-shadow: none !important;
+}

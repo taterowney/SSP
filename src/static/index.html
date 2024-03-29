@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Logger Unprofessional 😎</title>
+        <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+        <script src="/static/chart.js"></script>
+        <script src="/static/hammer.js"></script>
+        <script src="/static/chartjs-plugin-zoom.js"></script>
+        <script src="/static/handsontable.min.js"></script>
+        <script src="/static/animation-scripts.js"></script>
+        <link rel="stylesheet" href="/static/handsontable.min.css">
+        <link rel="stylesheet" href="/static/main.css">
+    </head>
+    <body>
+        <h1>Logger Unprofessional 😎</h1>
+        <p>By Tate</p>
+        <button id="reset">Reset Zoom</button>
+        <button id="test">Test</button>
+        <br>
+        <br>
+
+        <!-- Split screen with spreadsheet and chart -->
+        <div class="flex-container">
+          <div id="left-container" style="width: 30vw; height: 70vh; padding: 0px; margin: 0px; resize: horizontal; overflow: auto;">
+                <button id="select-spreadsheet" disabled=true>Spreadsheet</button>
+                <button id="select-function">Plot</button>
+                
+                <div id="spreadsheet-container" class="bordered-menu" style="width: 100%; height: 100%;">
+                  
+                  <div class="flex-container">
+                    <div class="float-left">
+                      <p>Save Data</p>
+                      <button id="exportData">Export</button>
+                    </div>
+                    <div class="float-right">
+                      <label for="importData">Load Data</label>
+                      <input id="importData" name="importData" type="file" accept=".csv">
+                    </div>
+                  </div>
+
+                  <div id="spreadsheet" style="width: 100%; height: auto;"></div>
+
+                </div>
+
+                <div id="function-menu-container" class="bordered-menu" style="display: none">
+                    <h2 style="text-align: center;">Plot Function</h2>
+
+                    <p>Best Fit: <i id="best-fit-render">--</i></p>
+
+                    <form id="interpolation-options-select">
+
+                      <input type="radio" id="plot-proportional" name="interpolation-options" value="proportional" class="interpolation-options">
+                      <label for="proportional">Proportional</label><br>
+                      <input type="radio" id="plot-linear" name="interpolation-options" value="linear" class="interpolation-options">
+                      <label for="linear">Linear</label><br>
+                      <input type="radio" id="plot-quadratic" name="interpolation-options" value="quadratic" class="interpolation-options">
+                      <label for="quadratic">Quadratic</label><br>
+                      <input type="radio" id="plot-cubic" name="interpolation-options" value="cubic" class="interpolation-options">
+                      <label for="cubic">Cubic</label><br>
+                      <input type="radio" id="plot-exponential" name="interpolation-options" value="exponential" class="interpolation-options">
+                      <label for="exponential">Exponential</label><br>
+                      <input type="radio" id="plot-logarithmic" name="interpolation-options" value="logarithmic" class="interpolation-options">
+                      <label for="logarithmic">Logarithmic</label><br>
+                      <input type="radio" id="plot-power" name="interpolation-options" value="power" class="interpolation-options">
+                      <label for="power">Power</label><br>
+                      <input type="radio" id="plot-sinusoidal" name="interpolation-options" value="sinusoidal" class="interpolation-options">
+                      <label for="sinusoidal">Sinusoidal</label><br>
+                      <br>
+
+                    </form>
+
+                    <button id="clear-plot">Clear Selection</button>
+
+                </div>
+
+            </div>
+            <div style="width: 50vw; height: 70vh; resize: horizontal; overflow: auto;">
+              <canvas id="chart"></canvas>
+            </div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings" class="modal">
+            <div class="modal-body">
+              <span class="close">&times;</span>
+              <div id="settingsContent" class="modal-content">
+                <h2>Settings</h2>
+                <p>Some text in the Modal..</p>
+              </div>
+            </div>
+          </div>
+        
+    </body>
+</html>
