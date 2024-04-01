@@ -27,7 +27,7 @@ from engineio.async_drivers import gevent
 # Stop Flask spam
 # logging.getLogger('werkzeug').disabled = True
 
-SUPPRESS_PRINT = True
+SUPPRESS_PRINT = False
 if SUPPRESS_PRINT:
     sys.stdout = open(os.devnull, 'w')
 
@@ -212,8 +212,8 @@ def handle_connect():
     if "page" in flask.session:
         window = WindowManager.window_objects[flask.session['page']]
         if window.on_socket_connect():
-            flask_socketio.join_room(flask.session['page'])
-#            print(f"Client connected: {flask.session['page']}")
+            flask_socketio.join_room(str(flask.session['page']))
+            # print(f"Client connected: {flask.session['page']}")
 
 
 @socketio.on("disconnect")
@@ -286,7 +286,7 @@ class Window:
             ServerManager.start()
 
         # open the browser window
-        WindowManager.open_browser(f"http://127.0.0.1:{PORT}/{self.page}", self.width, self.height, self.fullscreen)
+        WindowManager.open_browser(f"http://127.0.0.1:{PORT}/{str(self.page)}", self.width, self.height, self.fullscreen)
 #        subprocess.run(["/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", "--new-window",
 #                        f"--app=http://127.0.0.1:{PORT}/{self.page}"])
         # Wait until everything is connected
@@ -334,7 +334,7 @@ class Window:
                 self.js_result_event = None
 #            print("Sending command to client")
             conversation_uuid = str(uuid.uuid4())
-            socketio.emit("commands", conversation_uuid + js, room=self.page)
+            socketio.emit("commands", conversation_uuid + js, room=str(self.page))
             if await_result:
                 self.js_result_events[conversation_uuid] = gevent_event()
                 self.js_result_events[conversation_uuid].wait()

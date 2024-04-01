@@ -69,6 +69,7 @@ class PyWindow(Window):
                 if result.startswith('"') and result.endswith('"'):
                     result = result[1:-1]
                 result = result.replace("\\", "")
+                # print(result)
                 result = eval(result)
                 return result
 #                 type, result = result[1:-1].split(' ', 1)

@@ -216,7 +216,7 @@ def plot_best_fit(*args):
     params = model.make_params(**params_dict)
     try:
         result = model.fit(y_data, params, x=x_data)
-    except ValueError:
+    except (ValueError, TypeError):
         plotter.clearPlot()
         document.getElementById("best-fit-render").innerText = "Couldn't find valid fit"
         return
