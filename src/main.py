@@ -180,7 +180,7 @@ def plot_best_fit(*args):
 
     elif document.getElementById("plot-quadratic").checked == True:
         fxn = lambda x, a, b, c: a + b * x + c * x ** 2
-        function_render = lambda a, b, c: f"y = {round(a, 4)}x^2 + {round(b, 4)}x + {round(c, 4)}"
+        function_render = lambda a, b, c: f"y = {round(c, 4)}x^2 + {round(b, 4)}x + {round(a, 4)}"
 
     elif document.getElementById("plot-cubic").checked == True:
         fxn = lambda x, a, b, c, d: a + b * x + c * x ** 2 + d * x ** 3

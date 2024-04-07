@@ -14,7 +14,9 @@ window.addEventListener('load', function() {
 
     socket.on('disconnect', () => {
 //        console.log("Disconnected from server.");
-        window.open('','_self').close();
+//        window.open('','_self').close();
+//          Try to reconnect to server
+        socket.connect();
     });
 
     socket.on('commands', (msg) => {
@@ -32,6 +34,9 @@ window.addEventListener('load', function() {
         }
         finally {
 //            console.log("Result:", result);
+            console.log();
+            console.log(cmds);
+            console.log(result);
             socket.emit('results', uuid + result);
         }
     });

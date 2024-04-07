@@ -33,6 +33,10 @@ if SUPPRESS_PRINT:
 
 
 OPERATING_SYSTEM = platform.system().lower()
+
+if not OPERATING_SYSTEM == "darwin":
+    raise Exception("This module is only supported on macOS for now")
+
 if getattr(sys, 'frozen', False):
     # Running in a bundle
     BASE_DIR = sys._MEIPASS
@@ -40,6 +44,11 @@ else:
     # Running in normal Python environment
     PY = sys.executable
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def runOSAScript(script):
+    process = subprocess.run(['osascript', '-e', script], capture_output=True, text=True)
+    return process.stdout.strip()
 
 
 class WindowManager:
@@ -54,17 +63,20 @@ class WindowManager:
 
     @classmethod
     def maybe_close_app(cls):
-        if not cls.window_objects:
+        print(cls.is_browser_open())
+        # if not cls.window_objects:
+        #     ServerManager.stop()
+        if not cls.is_browser_open():
             ServerManager.stop()
 
     @classmethod
     def find_browser(cls):
         if OPERATING_SYSTEM == "windows":
             paths = [
-                "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
-                "C:\Program Files\Microsoft\Edge\Application\msedge.exe",
-                "C:\Program Files\Google\Chrome\Application\chrome.exe",
-                "C:\Program Files\BraveSoftware\Brave-Browser\Application\\brave.exe",
+                "C:\\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+                "C:\\Program Files\Microsoft\Edge\Application\msedge.exe",
+                "C:\\Program Files\Google\Chrome\Application\chrome.exe",
+                "C:\\Program Files\BraveSoftware\Brave-Browser\Application\\brave.exe",
             ]
             for path in paths:
                 if os.path.exists(path):
@@ -124,6 +136,22 @@ class WindowManager:
         flags.extend([f"--app={url}"])
         subprocess.run(flags, stdout=subprocess.DEVNULL)
 
+    @classmethod
+    def is_browser_open(cls):
+        return runOSAScript(f"""
+tell application "Google Chrome"
+    set windowList to every window
+    set found to false
+    repeat with win in windowList
+        repeat with t in (tabs of win)
+            if (URL of t as string) contains "http://127.0.0.1:{PORT}/" then
+                set found to true
+            end if
+        end repeat
+    end repeat
+    return found
+end tell
+""") == "true"
 
 class ServerManager:
     page_not_found = "<h1>Looks like there's nothing here...</h1><p>Have you been playing around with the URL?</p><p>Try relaunching the app.</p>"
@@ -209,6 +237,7 @@ def handle(page):
 
 @socketio.on("connect")
 def handle_connect():
+    print("Client connected")
     if "page" in flask.session:
         window = WindowManager.window_objects[flask.session['page']]
         if window.on_socket_connect():
@@ -322,7 +351,7 @@ class Window:
     def on_socket_disconnect(self):
         # When the frontend page is closed, it will disconnect from the server
         self.has_closed = True
-        WindowManager.window_objects.pop(self.page, None)
+        # WindowManager.window_objects.pop(self.page, None)
         WindowManager.maybe_close_app()
 
     def kill(self):

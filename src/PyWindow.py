@@ -56,6 +56,7 @@ class PyWindow(Window):
                 # runs the provided javascript, finds the result and its type, and returns the result
                 # To avoid too many communications through the socket channel, all the contents of Array objects will be evaluated and turned into a Python list, even though in JS they're objects
 
+                print(js)
                 full_js = f"""(() => {{
     try {{
         let result = ( () => {{ {js} }})();
@@ -66,6 +67,7 @@ class PyWindow(Window):
     }}
 }})();"""
                 result = self.js(full_js, await_result=True)
+                print(result)
                 if result.startswith('"') and result.endswith('"'):
                     result = result[1:-1]
                 result = result.replace("\\", "")
